@@ -59,17 +59,24 @@ func main() {
 
 	if len(urls) == 0 {
 		fmt.Println("At least one URL required")
+		flag.Usage()
 		os.Exit(0)
 	}
 
 	var yandexAPIClient = network.NewYandexAPIClient(token)
 
-	for _, url := range flag.Args() {
+	var urlsNumber = len(urls)
+	for idx, url := range urls {
 		var result, err = yandexAPIClient.HandleUrlCandidate(url)
 		if err != nil {
-			fmt.Printf("Failed to short url")
+			fmt.Printf("URL: %s\n", url)
+			fmt.Printf("  Failed\n")
 		} else {
+			fmt.Printf("URL: %s\n", url)
 			fmt.Println(result)
+		}
+		if idx < urlsNumber-1 {
+			fmt.Println()
 		}
 	}
 }
