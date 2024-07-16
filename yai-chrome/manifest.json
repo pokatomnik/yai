@@ -1,0 +1,11 @@
+{
+  "name": "Yai",
+  "description": "Yandex API text summarizer",
+  "version": "1.0",
+  "manifest_version": 3,
+  "permissions": ["activeTab", "scripting", "contextMenus", "storage"],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {}
+}
