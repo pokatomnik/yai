@@ -16,6 +16,12 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
 
 chrome.action.onClicked.addListener(async (tab) => {
   const token = await getToken();
+  if (!token) {
+    chrome.tabs.sendMessage(tab.id, {
+      action: "summary",
+      content: "Please specify token first",
+    });
+  }
   const url = tab.url;
   const summaryUrl = await fetchSummary(token, url);
   if (summaryUrl) {
