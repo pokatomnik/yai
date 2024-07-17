@@ -18,6 +18,9 @@ chrome.action.onClicked.addListener(async (tab) => {
   const token = await getToken();
   const url = tab.url;
   const summaryUrl = await fetchSummary(token, url);
-  const summary = await getSummary(summaryUrl);
-  chrome.tabs.sendMessage(tab.id, { action: "summary", content: summary });
+  if (summaryUrl) {
+    const summary = await getSummary(summaryUrl);
+    chrome.tabs.sendMessage(tab.id, { action: "summary", content: summary });
+  }
+  chrome.tabs.sendMessage(tab.id, { action: "summary", content: null });
 });
