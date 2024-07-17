@@ -1,3 +1,5 @@
+import { fetchSummary, getToken, getSummary } from "./summarizer.js";
+
 chrome.runtime.onInstalled.addListener(() => {
   chrome.contextMenus.create({
     id: "setToken",
@@ -15,31 +17,7 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
 chrome.action.onClicked.addListener(async (tab) => {
   const token = await getToken();
   const url = tab.url;
-  const summaryResponse = await fetchSummary(token, url);
-  console.log(summaryResponse);
+  const summaryUrl = await fetchSummary(token, url);
+  const summary = await getSummary(summaryUrl);
+  chrome.tabs.sendMessage(tab.id, { action: "summary", content: summary });
 });
-
-function getToken() {
-  return new Promise((resolve, reject) => {
-    chrome.storage.sync.get(["userText"], (result) => {
-      if (result.userText) {
-        resolve(result.userText);
-      } else {
-        reject(new Error("No token"));
-      }
-    });
-  });
-}
-
-async function fetchSummary(token, url) {
-  const articleResponse = await fetch("https://300.ya.ru/api/sharing-url", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `OAuth ${token}`,
-    },
-    body: JSON.stringify({ article_url: url }),
-  });
-  const json = articleResponse.json();
-  console.log(json);
-}

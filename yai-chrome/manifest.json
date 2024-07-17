@@ -5,7 +5,15 @@
   "manifest_version": 3,
   "permissions": ["activeTab", "scripting", "contextMenus", "storage"],
   "background": {
-    "service_worker": "background.js"
+    "service_worker": "background.js",
+    "type": "module"
   },
-  "action": {}
+  "action": {},
+  "host_permissions": ["https://300.ya.ru/*"],
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"]
+    }
+  ]
 }
