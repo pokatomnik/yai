@@ -27,6 +27,10 @@ export async function fetchSummary(token, url) {
   }
 }
 
+const replaceMap = new Map([
+  ["•", ""],
+  ["&quot;", '"'],
+]);
 export async function getSummary(url) {
   try {
     const response = await fetch(url);
@@ -37,7 +41,11 @@ export async function getSummary(url) {
     const contentItems = content
       .split("\n")
       .map((item) => {
-        return item.replace("•", "").trim();
+        return Array.from(replaceMap.entries())
+          .reduce((acc, [from, to]) => {
+            return acc.replaceAll(from, to);
+          }, item)
+          .trim();
       })
       .filter(Boolean);
     return contentItems.join("\n");
